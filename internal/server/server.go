@@ -3,6 +3,7 @@ package server
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 )
@@ -30,15 +31,35 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	reader := bufio.NewReader(conn)
+	var allData []byte
 
 	for {
-		data, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Client disconnected")
-			return
+		buf := make([]byte, 4096)
+		n, err := reader.Read(buf)
+
+		if n > 0 {
+			allData = append(allData, buf[:n]...)
+		}
+		if n<4096{
+			break
 		}
 
-		fmt.Println("Received from client : ",data)
-		conn.Write([]byte(data))
+		if err != nil {
+			if err != io.EOF {
+				log.Println("Read error:", err)
+			}
+			break
+		}
 	}
+
+	fmt.Println("----- RAW REQUEST BEGIN -----")
+	fmt.Println(string(allData))
+	fmt.Println("----- RAW REQUEST END -----")
+
+	response := "HTTP/1.1 200 OK\r\n" +
+		"Content-Length: 5\r\n" +
+		"\r\n" +
+		"Hello"
+
+	conn.Write([]byte(response))
 }
