@@ -2,10 +2,11 @@ package server
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"net"
+
+	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
 func Listen() {
@@ -40,7 +41,7 @@ func handleConnection(conn net.Conn) {
 		if n > 0 {
 			allData = append(allData, buf[:n]...)
 		}
-		if n<4096{
+		if n < 4096 {
 			break
 		}
 
@@ -52,9 +53,11 @@ func handleConnection(conn net.Conn) {
 		}
 	}
 
-	fmt.Println("----- RAW REQUEST BEGIN -----")
-	fmt.Println(string(allData))
-	fmt.Println("----- RAW REQUEST END -----")
+	// fmt.Println("----- RAW REQUEST BEGIN -----")
+	// fmt.Println(string(allData))
+	// fmt.Println("----- RAW REQUEST END -----")
+
+	rawHttp.ParseRequest(string(allData))
 
 	response := "HTTP/1.1 200 OK\r\n" +
 		"Content-Length: 5\r\n" +
