@@ -2,67 +2,38 @@ package server
 
 import (
 	"bufio"
+	"fmt"
 	"io"
-	"log"
 	"net"
-
-	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
 func Listen() {
-	listener, err := net.Listen("tcp", ":8000")
+	listner, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		log.Println("Error starting server:", err)
+		fmt.Println("Error in starting the server ", err)
 		return
 	}
-	log.Println("Server Started on Port 8000")
-
+	fmt.Println("Starting the Server on port 8080")
 	for {
-		conn, err := listener.Accept()
+		conn, err := listner.Accept()
 		if err != nil {
-			log.Println("Accept error:", err)
-			continue
+			fmt.Println("Error in accepting the connection ", err)
+			return
 		}
+		defer conn.Close()
+		reader := bufio.NewReader(conn)
 
-		go handleConnection(conn)
-	}
-}
-
-func handleConnection(conn net.Conn) {
-	defer conn.Close()
-
-	reader := bufio.NewReader(conn)
-	var allData []byte
-
-	for {
-		buf := make([]byte, 4096)
-		n, err := reader.Read(buf)
-
-		if n > 0 {
-			allData = append(allData, buf[:n]...)
-		}
-		if n < 4096 {
-			break
-		}
-
-		if err != nil {
-			if err != io.EOF {
-				log.Println("Read error:", err)
+		for {
+			n, err := reader.ReadString('\n')
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+				fmt.Println("Error in Reading ", err)
+				return
 			}
-			break
+			fmt.Println("Read Length is ", n)
 		}
+
 	}
-
-	// fmt.Println("----- RAW REQUEST BEGIN -----")
-	// fmt.Println(string(allData))
-	// fmt.Println("----- RAW REQUEST END -----")
-
-	rawHttp.ParseRequest(string(allData))
-
-	response := "HTTP/1.1 200 OK\r\n" +
-		"Content-Length: 5\r\n" +
-		"\r\n" +
-		"Hello"
-
-	conn.Write([]byte(response))
 }

@@ -1,0 +1,29 @@
+curl -X POST "http://localhost:8080/users/42/profile?verbose=true" \
+  -H "Host: localhost:8080" \
+  -H "User-Agent: curl/8.5.0" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer abc.def.ghi" \
+  -H "Connection: close" \
+  -d '{
+    "name": "Navneet",
+    "age": 28,
+    "active": true
+  }'
+
+------------------------------------------------------------------
+
+POST /users/42/profile?verbose=true HTTP/1.1\r\n
+Host: localhost:8080\r\n
+User-Agent: curl/8.5.0\r\n
+Accept: application/json\r\n
+Content-Type: application/json\r\n
+Authorization: Bearer abc.def.ghi\r\n
+Content-Length: 63\r\n
+Connection: close\r\n
+\r\n
+{
+  "name": "Navneet",
+  "age": 28,
+  "active": true
+}
