@@ -29,6 +29,7 @@ func ListenAndServe() {
 	}
 }
 
+// handleConnection handle every request data
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
@@ -83,7 +84,7 @@ func handleConnection(conn net.Conn) {
 		totalSize += n
 	}
 
-	_ = &rawHttp.Context{
+	ctx:= &rawHttp.Context{
 		Conn:    conn,
 		Method:  method,
 		Path:    path,
@@ -96,12 +97,15 @@ func handleConnection(conn net.Conn) {
 		},
 	}
 
-	response := "HTTP/1.1 200 OK\r\n" +
-		"Content-Length: 2\r\n" +
-		"Content-Type: text/plain\r\n" +
-		"Connection: close\r\n" +
-		"\r\n" +
-		"OK"
+	// response := "HTTP/1.1 200 OK\r\n" +
+	// 	"Content-Length: 2\r\n" +
+	// 	"Content-Type: text/plain\r\n" +
+	// 	"Connection: close\r\n" +
+	// 	"\r\n" +
+	// 	"OK"
 
-	conn.Write([]byte(response))
+	// conn.Write([]byte(response))
+	fmt.Println("Context is ",ctx)
+
+
 }
