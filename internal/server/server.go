@@ -6,9 +6,11 @@ import (
 	"net"
 	"strconv"
 	"strings"
+
+	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
-func Listen() {
+func ListenAndServe() {
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		fmt.Println("Error starting server:", err)
@@ -37,12 +39,16 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 
-	arr := strings.Split(line, " ")
-
-	for idx := range arr {
-		fmt.Println(idx, " ", arr[idx])
+	parts := strings.Split(strings.TrimSpace(line), " ")
+	if len(parts) < 3 {
+		fmt.Println("Invalid request line")
+		return
 	}
-	headers := map[string]interface{}{}
+
+	method := parts[0]
+	path := parts[1]
+	protocol := parts[2]
+	headers := map[string]string{}
 
 	for {
 		line, err := reader.ReadString('\n')
@@ -56,15 +62,15 @@ func handleConnection(conn net.Conn) {
 		header := strings.Split(line, ":")
 		headers[header[0]] = strings.ReplaceAll(header[1], " ", "")
 	}
-	fmt.Println("Headers is ", headers)
-
-	bodyLength := headers["Content-Length"]
-	bodySize, err := strconv.Atoi(strings.Split(bodyLength.(string), "\r\n")[0])
-	if err != nil {
-		fmt.Println("Error in converting string to int ", err)
-		return
+	var bodySize int = 0
+	bodyLength, ok := headers["Content-Length"]
+	if ok {
+		bodySize, err = strconv.Atoi(strings.Split(bodyLength, "\r\n")[0])
+		if err != nil {
+			fmt.Println("Error in converting string to int ", err)
+			return
+		}
 	}
-	fmt.Println("Body size is ", bodySize)
 	body := make([]byte, bodySize)
 	totalSize := 0
 
@@ -77,7 +83,18 @@ func handleConnection(conn net.Conn) {
 		totalSize += n
 	}
 
-	fmt.Println("Body is", string(body))
+	_ = &rawHttp.Context{
+		Conn:    conn,
+		Method:  method,
+		Path:    path,
+		Proto:   protocol,
+		Headers: headers,
+		Body:    body,
+		Status:  200,
+		RespHeader: map[string]string{
+			"Content-Type": "text/plain",
+		},
+	}
 
 	response := "HTTP/1.1 200 OK\r\n" +
 		"Content-Length: 2\r\n" +
