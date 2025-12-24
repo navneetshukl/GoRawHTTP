@@ -13,7 +13,7 @@ type Router struct {
 }
 
 func NewRouter() *Router {
-	return &Router{}
+	return &Router{routes: make([]Route, 0)}
 }
 
 func (r *Router) Handle(method, path string, h Handler) {
