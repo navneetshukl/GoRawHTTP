@@ -48,3 +48,7 @@ func (r *Router) PATCH(path string, h Handler) {
 func (r *Router) DELETE(path string, h Handler) {
 	r.Handle("DELETE", path, h)
 }
+
+func(r *Router) ExecuteHandler(path string){
+
+}
