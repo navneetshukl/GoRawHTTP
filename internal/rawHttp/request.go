@@ -62,3 +62,19 @@ func (ctx *Context) DecodeBodyStruct(decodeType interface{}) {
 	}
 
 }
+
+// DecodeBodyInterface decodes the request body to given interface
+func (ctx *Context) DecodeBodyInterface(decodeType interface{}) {
+	if checkStruct(decodeType) {
+		ctx.writeResponse(401, "Not a struct")
+		return
+
+	}
+
+	err := json.Unmarshal(ctx.Body, &decodeType)
+	if err != nil {
+		ctx.writeResponse(401, "Invalid struct to decode")
+		return
+	}
+
+}

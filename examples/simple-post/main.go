@@ -11,7 +11,7 @@ type Data struct {
 	Email string `json:"email"`
 }
 
-func SendName(ctx *rawHttp.Context) {
+func SendNameStruct(ctx *rawHttp.Context) {
 	data := &Data{}
 
 	ctx.DecodeBodyStruct(data)
@@ -24,8 +24,21 @@ func SendName(ctx *rawHttp.Context) {
 
 }
 
+func SendNameInterface(ctx *rawHttp.Context) {
+	var data interface{}
+
+	ctx.DecodeBodyInterface(data)
+	fmt.Println("Data is ",data)
+
+	ctx.JSON(200, rawHttp.H{
+		"msg": "data read successfully",
+	})
+
+}
+
 func main() {
 	router := rawHttp.NewRouter()
-	router.POST("/", SendName)
+	router.POST("/", SendNameStruct)
+	router.POST("/interface",SendNameInterface)
 	router.Run()
 }
