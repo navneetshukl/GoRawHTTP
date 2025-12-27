@@ -98,16 +98,6 @@ func(r *Router) handleConnection(conn net.Conn) {
 
 	r.executeHandler(ctx)
 
-	// response := "HTTP/1.1 200 OK\r\n" +
-	// 	"Content-Length: 2\r\n" +
-	// 	"Content-Type: text/plain\r\n" +
-	// 	"Connection: close\r\n" +
-	// 	"\r\n" +
-	// 	"OK"
-
-	// conn.Write([]byte(response))
-	//fmt.Println("Context is ", ctx)
-
 }
 
 func(r *Router)executeHandler(ctx *Context){
@@ -120,5 +110,5 @@ func(r *Router)executeHandler(ctx *Context){
 			return
 		}
 	}
-	ctx.WriteResponse(401,"HANDLER ERROR : handler does not exist")
+	ctx.String(401,"HANDLER ERROR : handler does not exist")
 }
