@@ -60,13 +60,23 @@ func (ctx *Context) AddHeader(key, value string) {
 	ctx.RespHeader[key] = value
 }
 
-func (ctx *Context) WriteResponse(data string) {
-	response := fmt.Sprint("HTTP/1.1 200 OK\r\n" +
-		"Content-Length: 2\r\n" +
-		"Content-Type: text/plain\r\n" +
-		"Connection: close\r\n" +
-		"\r\n" +
-		data)
+func (ctx *Context) WriteResponse(status int, body string) {
+	statusText := "OK"
+	if status == 404 {
+		statusText = "Not Found"
+	}
+
+	response := fmt.Sprintf(
+		"HTTP/1.1 %d %s\r\n"+
+			"Content-Type: text/plain\r\n"+
+			"Content-Length: %d\r\n"+
+			"Connection: close\r\n"+
+			"\r\n%s",
+		status,
+		statusText,
+		len(body),
+		body,
+	)
 
 	ctx.Conn.Write([]byte(response))
 }

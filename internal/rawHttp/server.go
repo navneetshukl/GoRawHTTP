@@ -120,5 +120,5 @@ func(r *Router)executeHandler(ctx *Context){
 			return
 		}
 	}
-	ctx.WriteResponse("HANDLER ERROR : handler does not exist")
+	ctx.WriteResponse(401,"HANDLER ERROR : handler does not exist")
 }

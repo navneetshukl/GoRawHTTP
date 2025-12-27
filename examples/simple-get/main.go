@@ -8,9 +8,9 @@ import (
 
 
 func CheckHealth(ctx *rawHttp.Context){
-	log.Println("Method is ",ctx.Method)
-	log.Println("Path is ",ctx.Path)
-	ctx.WriteResponse("workingfine")
+	log.Println("CheckHealth : Method is ",ctx.Method)
+	log.Println("Check Health : Path is ",ctx.Path)
+	ctx.WriteResponse(200,"workingfine")
 }
 
 func main(){
