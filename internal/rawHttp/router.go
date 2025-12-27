@@ -49,6 +49,3 @@ func (r *Router) DELETE(path string, h Handler) {
 	r.Handle("DELETE", path, h)
 }
 
-func (r *Router) Run() {
-
-}

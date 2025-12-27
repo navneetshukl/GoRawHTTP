@@ -1,6 +1,9 @@
 package rawHttp
 
-import "net"
+import (
+	"fmt"
+	"net"
+)
 
 type Context struct {
 	Conn net.Conn
@@ -34,25 +37,36 @@ func (ctx *Context) GetPath() string {
 	}
 }
 
-func(ctx *Context)GetHeader(key string)(string){
-	if _,ok:=ctx.Headers[key];!ok{
+func (ctx *Context) GetHeader(key string) string {
+	if _, ok := ctx.Headers[key]; !ok {
 		return "Header Not Present"
 	}
 	return ctx.Headers[key]
 }
 
-func(ctx *Context)GetAllHeaders()map[string]string{
+func (ctx *Context) GetAllHeaders() map[string]string {
 	return ctx.Headers
 }
 
-func(ctx *Context)SetStatus(status int){
-	ctx.Status=status
+func (ctx *Context) SetStatus(status int) {
+	ctx.Status = status
 }
 
-func(ctx *Context)SetBody(body []byte){
-	ctx.Body=body
+func (ctx *Context) SetBody(body []byte) {
+	ctx.Body = body
 }
 
-func(ctx *Context)AddHeader(key,value string){
-	ctx.RespHeader[key]=value
+func (ctx *Context) AddHeader(key, value string) {
+	ctx.RespHeader[key] = value
+}
+
+func (ctx *Context) WriteResponse(data string) {
+	response := fmt.Sprint("HTTP/1.1 200 OK\r\n" +
+		"Content-Length: 2\r\n" +
+		"Content-Type: text/plain\r\n" +
+		"Connection: close\r\n" +
+		"\r\n" +
+		data)
+
+	ctx.Conn.Write([]byte(response))
 }
