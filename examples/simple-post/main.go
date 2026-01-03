@@ -27,7 +27,7 @@ func SendNameStruct(ctx *rawHttp.Context) {
 func SendNameInterface(ctx *rawHttp.Context) {
 	var data interface{}
 
-	ctx.DecodeBodyInterface(data)
+	ctx.DecodeBodyDynamic(data)
 	fmt.Println("Data is ",data)
 
 	ctx.JSON(200, rawHttp.H{
