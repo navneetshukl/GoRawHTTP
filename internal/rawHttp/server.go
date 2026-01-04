@@ -115,8 +115,7 @@ func (r *Router) executeHandler(ctx *Context) {
 		return
 	}
 	for _, mid := range r.middleware {
-		fmt.Println("Executing middleware")
-		mid.middleware()
+		mid(ctx)
 	}
 
 }

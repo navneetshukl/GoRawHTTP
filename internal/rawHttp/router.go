@@ -2,15 +2,14 @@ package rawHttp
 
 type Handler func(*Context)
 
+type Middleware func(*Context)
+
 type Route struct {
 	method  string
 	path    string
 	handler Handler
 }
 
-type Middleware struct{
-	middleware func()
-}
 
 type Router struct {
 	routes     []Route

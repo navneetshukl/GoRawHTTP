@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/navneetshukl/gorawhttp/internal/middlewares"
 	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
+	"github.com/navneetshukl/gorawhttp/internal/middleware"
 )
 
 func CheckHealth(ctx *rawHttp.Context) {
@@ -22,8 +22,8 @@ func JsonResponse(ctx *rawHttp.Context) {
 
 func main() {
 	router := rawHttp.NewRouter()
-	router.UseMiddleware(middlewares.Logger)
-	//router.GET("/", CheckHealth)
+	router.UseMiddleware(middleware.Logger())
+	router.GET("/", CheckHealth)
 	router.GET("/json", JsonResponse)
 	router.Run()
 }
