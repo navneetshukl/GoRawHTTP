@@ -3,7 +3,6 @@ package rawHttp
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"net"
 	"strconv"
 	"strings"
@@ -29,7 +28,7 @@ func (r *Router) Run() {
 }
 
 // handleConnection handle every request data
-func(r *Router) handleConnection(conn net.Conn) {
+func (r *Router) handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	reader := bufio.NewReader(conn)
@@ -100,15 +99,24 @@ func(r *Router) handleConnection(conn net.Conn) {
 
 }
 
-func(r *Router)executeHandler(ctx *Context){
-	for _,route:=range r.routes{
-		fmt.Println("Inside the execute method")
-		if route.method==ctx.Method && route.path==ctx.Path{
-			log.Println("Route Method is ",route.method)
-			log.Println("Route Path is ",route.path)
+func (r *Router) executeHandler(ctx *Context) {
+	isHandlerError := false
+	for _, route := range r.routes {
+		if route.method == ctx.Method && route.path == ctx.Path {
+			isHandlerError = true
 			route.handler(ctx)
-			return
+			//return
+			break
 		}
+
 	}
-	ctx.String(401,"HANDLER ERROR : handler does not exist")
+	if isHandlerError {
+		ctx.String(401, "HANDLER ERROR : handler does not exist")
+		return
+	}
+	for _, mid := range r.middleware {
+		fmt.Println("Executing middleware")
+		mid.middleware()
+	}
+
 }

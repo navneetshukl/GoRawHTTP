@@ -1,17 +1,26 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"time"
 
-func App(ctx *gin.Context){
-	ctx.JSON(200,gin.H{
-		"name":"navneet",
+	"github.com/gin-gonic/gin"
+)
+
+func App(ctx *gin.Context) {
+	time.Sleep(10 * time.Second)
+	fmt.Println("1")
+	ctx.JSON(200, gin.H{
+		"name": "navneet",
 	})
+	fmt.Println("2")
 }
 
 func main() {
 	//server.ListenAndServe()
 
-	router:=gin.New()
-	router.GET("/app",App)
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.GET("/app", App)
 	router.Run()
 }

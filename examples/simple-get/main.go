@@ -1,27 +1,29 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
+	"github.com/navneetshukl/gorawhttp/internal/middlewares"
 	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
 func CheckHealth(ctx *rawHttp.Context) {
-	log.Println("CheckHealth : Method is ", ctx.Method)
-	log.Println("Check Health : Path is ", ctx.Path)
 	ctx.String(200, "workingfine")
 }
 
 func JsonResponse(ctx *rawHttp.Context) {
+	fmt.Println("1")
 	ctx.JSON(400, rawHttp.H{
 		"firstName": "navneet",
 		"lastName":  "shukla",
 	})
+	fmt.Println("2")
 }
 
 func main() {
 	router := rawHttp.NewRouter()
-	router.GET("/", CheckHealth)
+	router.UseMiddleware(middlewares.Logger)
+	//router.GET("/", CheckHealth)
 	router.GET("/json", JsonResponse)
 	router.Run()
 }

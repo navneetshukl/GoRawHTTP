@@ -8,12 +8,17 @@ type Route struct {
 	handler Handler
 }
 
+type Middleware struct{
+	middleware func()
+}
+
 type Router struct {
-	routes []Route
+	routes     []Route
+	middleware []Middleware
 }
 
 func NewRouter() *Router {
-	return &Router{routes: make([]Route, 0)}
+	return &Router{routes: make([]Route, 0), middleware: make([]Middleware, 0)}
 }
 
 func (r *Router) Handle(method, path string, h Handler) {
@@ -48,4 +53,3 @@ func (r *Router) PATCH(path string, h Handler) {
 func (r *Router) DELETE(path string, h Handler) {
 	r.Handle("DELETE", path, h)
 }
-
