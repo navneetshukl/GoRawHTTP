@@ -100,10 +100,10 @@ func (r *Router) handleConnection(conn net.Conn) {
 }
 
 func (r *Router) executeHandler(ctx *Context) {
-	isHandlerError := false
+	isHandlerError := true
 	for _, route := range r.routes {
 		if route.method == ctx.Method && route.path == ctx.Path {
-			isHandlerError = true
+			isHandlerError = false
 			route.handler(ctx)
 			//return
 			break
