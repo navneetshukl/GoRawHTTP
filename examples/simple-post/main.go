@@ -14,7 +14,7 @@ type Data struct {
 func SendNameStruct(ctx *rawHttp.Context) {
 	data := &Data{}
 
-	ctx.DecodeBodyStruct(data)
+	ctx.DecodeBody(data)
 	fmt.Println("name is ", data.Name)
 	fmt.Println("email is ", data.Email)
 
@@ -27,7 +27,7 @@ func SendNameStruct(ctx *rawHttp.Context) {
 func SendNameInterface(ctx *rawHttp.Context) {
 	var data interface{}
 
-	ctx.DecodeBodyDynamic(data)
+	ctx.DecodeBody(&data)
 	fmt.Println("Data is ",data)
 
 	ctx.JSON(200, rawHttp.H{
