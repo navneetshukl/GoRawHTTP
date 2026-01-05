@@ -1,5 +1,5 @@
 package rawHttp
 
-func (r *Router) UseMiddleware(m Middleware) {
-	r.middleware = append(r.middleware, m)
+func (r *Router) UseMiddleware(m ...Handler) {
+	r.routes = append(r.routes, Route{handler: m})
 }

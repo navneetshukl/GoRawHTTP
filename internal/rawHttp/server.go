@@ -3,6 +3,7 @@ package rawHttp
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"strconv"
 	"strings"
@@ -93,6 +94,7 @@ func (r *Router) handleConnection(conn net.Conn) {
 		RespHeader: map[string]string{
 			"Content-Type": "text/plain",
 		},
+		CurrentHandler: 0,
 	}
 
 	r.executeHandler(ctx)
@@ -100,22 +102,18 @@ func (r *Router) handleConnection(conn net.Conn) {
 }
 
 func (r *Router) executeHandler(ctx *Context) {
-	isHandlerError := true
+	fmt.Println("Incoming request:", ctx.Method, ctx.Path)
+
 	for _, route := range r.routes {
 		if route.method == ctx.Method && route.path == ctx.Path {
-			isHandlerError = false
-			route.handler(ctx)
-			//return
-			break
+			ctx.Handlers = route.handler
+			log.Println("Total Handler is ",len(ctx.Handlers))
+			ctx.CurrentHandler = -1
+			ctx.Next()
+			return
 		}
 
 	}
-	if isHandlerError {
-		ctx.String(401, "HANDLER ERROR : handler does not exist")
-		return
-	}
-	for _, mid := range r.middleware {
-		mid(ctx)
-	}
+	ctx.String(401, "HANDLER ERROR : handler does not exist")
 
 }

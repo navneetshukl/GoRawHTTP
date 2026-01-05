@@ -20,12 +20,25 @@ type Context struct {
 	Status     int
 	RespBody   []byte
 	RespHeader map[string]string
+
+	// handling current executing function in case of middleware channing
+
+	CurrentHandler int
+	Handlers       []Handler
 }
 
-func newContext()*Context{
+func newContext() *Context {
 	return &Context{
-		Headers: make(map[string]string),
-		RespBody: make([]byte, 0),
-		RespHeader: make(map[string]string),
+		Headers:        make(map[string]string),
+		RespBody:       make([]byte, 0),
+		RespHeader:     make(map[string]string),
+		CurrentHandler: 0,
+	}
+}
+
+func (ctx *Context) Next() {
+	ctx.CurrentHandler = ctx.CurrentHandler + 1
+	if ctx.CurrentHandler < len(ctx.Handlers) {
+		ctx.Handlers[ctx.CurrentHandler](ctx)
 	}
 }

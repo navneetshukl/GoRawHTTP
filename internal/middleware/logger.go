@@ -8,13 +8,13 @@ import (
 	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
-func Logger() rawHttp.Middleware {
+func Logger() rawHttp.Handler {
 	return func(ctx *rawHttp.Context) {
 
 		start := time.Now()
 
 		// Call next handler
-		//ctx.Next()
+		ctx.Next()
 
 		latency := time.Since(start)
 		status := ctx.Status //
