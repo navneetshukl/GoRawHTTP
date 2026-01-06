@@ -33,7 +33,7 @@ func main() {
 	router := rawHttp.NewRouter()
 	router.UseMiddleware(middleware.Logger())
 	// router.GET("/", CheckHealth)
-	router.GET("/", A, B)
+	router.GET("/", A,B)
 
 	router.GET("/json", JsonResponse)
 	router.Run()

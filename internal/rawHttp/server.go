@@ -101,13 +101,18 @@ func (r *Router) handleConnection(conn net.Conn) {
 
 }
 
+// executeHandler will execute the required route and middleware
 func (r *Router) executeHandler(ctx *Context) {
-	fmt.Println("Incoming request:", ctx.Method, ctx.Path)
 
 	for _, route := range r.routes {
 		if route.method == ctx.Method && route.path == ctx.Path {
-			ctx.Handlers = route.handler
-			log.Println("Total Handler is ",len(ctx.Handlers))
+
+			// appending the required global middleware and handler middleware to execute
+			allhandlers := make([]Handler, 0, len(r.middleware)+len(route.handler))
+			allhandlers = append(allhandlers, r.middleware...)
+			allhandlers = append(allhandlers, route.handler...)
+			ctx.Handlers = allhandlers
+			log.Println("Total Handler is ", len(ctx.Handlers))
 			ctx.CurrentHandler = -1
 			ctx.Next()
 			return

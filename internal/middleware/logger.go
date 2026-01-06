@@ -13,36 +13,55 @@ func Logger() rawHttp.Handler {
 
 		start := time.Now()
 
-		// Call next handler
+		// Execute next handlers
 		ctx.Next()
 
 		latency := time.Since(start)
-		status := ctx.Status //
+		status := ctx.Status
 		method := ctx.Method
 		path := ctx.Path
 
-		// Pick color based on status
-		statusColor := color.New(color.FgGreen)
+		// ---------- STATUS COLOR + ICON ----------
+		var statusColor *color.Color
+		var statusIcon string
+
 		switch {
 		case status >= 500:
-			statusColor = color.New(color.FgRed)
+			statusColor = color.New(color.FgRed, color.Bold)
+			statusIcon = "🔴"
 		case status >= 400:
-			statusColor = color.New(color.FgYellow)
+			statusColor = color.New(color.FgYellow, color.Bold)
+			statusIcon = "🟡"
 		case status >= 300:
-			statusColor = color.New(color.FgCyan)
+			statusColor = color.New(color.FgCyan, color.Bold)
+			statusIcon = "🔵"
+		default:
+			statusColor = color.New(color.FgGreen, color.Bold)
+			statusIcon = "🟢"
 		}
 
-		statusStr := statusColor.Sprintf("%d", status)
-		methodStr := color.New(color.FgMagenta).Sprintf("%s", method)
-		pathStr := color.New(color.FgWhite).Sprintf("%s", path)
-		latencyStr := color.New(color.FgBlue).Sprintf("%v", latency)
+		// ---------- METHOD COLOR ----------
+		methodColor := color.New(color.FgMagenta, color.Bold)
 
-		fmt.Printf("[RAWHTTP] %s | %s | %s | %s\n",
+		// ---------- PATH COLOR ----------
+		pathColor := color.New(color.FgWhite)
+
+		// ---------- LATENCY COLOR ----------
+		latencyColor := color.New(color.FgBlue)
+
+		// ---------- FORMAT VALUES ----------
+		statusStr := statusColor.Sprintf("%s %3d", statusIcon, status)
+		methodStr := methodColor.Sprintf("%-7s", method)
+		pathStr := pathColor.Sprintf("%-30s", path)
+		latencyStr := latencyColor.Sprintf("%8s", latency)
+
+		// ---------- FINAL OUTPUT ----------
+		fmt.Printf(
+			"%s │ %s │ %s │ %s\n",
 			statusStr,
 			methodStr,
 			pathStr,
 			latencyStr,
 		)
 	}
-
 }

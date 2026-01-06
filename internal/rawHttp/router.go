@@ -13,11 +13,11 @@ type Route struct {
 
 type Router struct {
 	routes     []Route
-	//middleware []Middleware
+	middleware []Handler
 }
 
 func NewRouter() *Router {
-	return &Router{routes: make([]Route, 0)}
+	return &Router{routes: make([]Route, 0),middleware: make([]Handler, 0)}
 }
 
 func (r *Router) Handle(method, path string, h ...Handler) {
