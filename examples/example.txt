@@ -1,4 +1,4 @@
-curl -X POST "http://localhost:8080/users/42/profile?verbose=true" \
+curl -X POST "http://localhost:8080/users/42/profile?verbose=true&name=navneet" \
   -H "Host: localhost:8080" \
   -H "User-Agent: curl/8.5.0" \
   -H "Accept: application/json" \

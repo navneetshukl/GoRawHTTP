@@ -15,6 +15,7 @@ type Context struct {
 	Proto   string
 	Headers map[string]string
 	Body    []byte
+	UrlParams map[string]string
 
 	// response
 	Status     int

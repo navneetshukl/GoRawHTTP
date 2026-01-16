@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/navneetshukl/gorawhttp/internal/rawHttp"
 )
 
 func App(ctx *gin.Context) {
@@ -19,8 +20,11 @@ func App(ctx *gin.Context) {
 func main() {
 	//server.ListenAndServe()
 
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.GET("/app", App)
+	// router := gin.New()
+	// router.Use(gin.Logger())
+	// router.GET("/app", App)
+	// router.Run()
+
+	router:=rawHttp.NewRouter()
 	router.Run()
 }

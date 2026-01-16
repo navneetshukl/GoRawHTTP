@@ -27,4 +27,12 @@ func (ctx *Context) GetAllHeaders() map[string]string {
 	return ctx.Headers
 }
 
+func(ctx *Context)GetParam(key string)string{
+	return ctx.UrlParams[key]
+}
+
+func(ctx *Context)GetParams()map[string]string{
+	return ctx.UrlParams
+}
+
 // checkStruct check if the provided interface is struct or not

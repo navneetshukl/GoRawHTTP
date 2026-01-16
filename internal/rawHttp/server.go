@@ -82,11 +82,13 @@ func (r *Router) handleConnection(conn net.Conn) {
 		}
 		totalSize += n
 	}
+	queryParams:=r.getQueryParams(path)
 
 	ctx := &Context{
 		Conn:    conn,
 		Method:  method,
 		Path:    path,
+		UrlParams: queryParams,
 		Proto:   protocol,
 		Headers: headers,
 		Body:    body,
@@ -99,6 +101,20 @@ func (r *Router) handleConnection(conn net.Conn) {
 
 	r.executeHandler(ctx)
 
+}
+
+// getQueryParams split the url params in key value pair
+func (r *Router) getQueryParams(path string) map[string]string {
+	path = strings.Split(path, "?")[1]
+	params := strings.Split(path, "&")
+	mp := make(map[string]string)
+	for _, v := range params {
+		param := strings.Split(v, "=")
+		key := param[0]
+		value := param[1]
+		mp[key] = value
+	}
+	return mp
 }
 
 // executeHandler will execute the required route and middleware
