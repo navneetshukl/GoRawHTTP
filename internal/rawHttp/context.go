@@ -1,20 +1,23 @@
 package rawHttp
 
 import (
+	"context"
 	"net"
 )
 
 type H map[string]interface{}
 
 type Context struct {
-	Conn net.Conn
+	Conn       net.Conn
+	Context    context.Context
+	CancelFunc context.CancelFunc
 
 	// request
-	Method  string
-	Path    string
-	Proto   string
-	Headers map[string]string
-	Body    []byte
+	Method    string
+	Path      string
+	Proto     string
+	Headers   map[string]string
+	Body      []byte
 	UrlParams map[string]string
 
 	// response
